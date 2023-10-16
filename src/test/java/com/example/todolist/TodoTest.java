@@ -32,4 +32,10 @@ public class TodoTest {
         assertEquals("No id", todoNoId.getTitle());
         assertFalse(todoNoId.isCompleted());
     }
+
+    @Test
+    void returnsTodoAsString() {
+        Todo todo = new Todo("123", "New todo", true);
+        assertEquals("Todo{_id='123', title='New todo', completed=true}", todo.toString());
+    }
 }
