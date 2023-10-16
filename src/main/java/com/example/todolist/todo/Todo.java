@@ -1,4 +1,4 @@
-package com.example.todolist;
+package com.example.todolist.todo;
 
 public class Todo {
     private String _id;

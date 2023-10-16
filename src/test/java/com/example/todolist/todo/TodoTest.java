@@ -1,5 +1,6 @@
-package com.example.todolist;
+package com.example.todolist.todo;
 
+import com.example.todolist.todo.Todo;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

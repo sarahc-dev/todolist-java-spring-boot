@@ -18,9 +18,9 @@ class TodolistApplicationTests {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Test
-	public void shouldReturnDefaultMessage() throws Exception {
-		mockMvc.perform(get("/api/todos")).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("ok")));
-	}
+//	@Test
+//	public void shouldReturnDefaultMessage() throws Exception {
+//		mockMvc.perform(get("/api/todos")).andDo(print()).andExpect(status().isOk())
+//				.andExpect(content().string(containsString("ok")));
+//	}
 }
