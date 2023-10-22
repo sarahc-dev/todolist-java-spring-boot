@@ -28,7 +28,7 @@ public class TodoTest {
 
     @Test
     void constructsTodoNoId() {
-        Todo todoNoId = new Todo("No id", false);
+        Todo todoNoId = new Todo("No id");
         assertNull(todoNoId.get_id());
         assertEquals("No id", todoNoId.getTitle());
         assertFalse(todoNoId.isCompleted());

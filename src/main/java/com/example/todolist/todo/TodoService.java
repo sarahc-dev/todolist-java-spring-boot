@@ -15,4 +15,9 @@ public class TodoService {
     public ArrayList<Todo> getTodos() {
         return todos;
     }
+
+    public Todo addTodo(Todo todo) {
+        todos.add(todo);
+        return todo;
+    }
 }

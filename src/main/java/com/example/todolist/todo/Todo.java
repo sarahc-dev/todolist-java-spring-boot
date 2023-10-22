@@ -14,9 +14,9 @@ public class Todo {
         this.completed = completed;
     }
 
-    public Todo(String title, boolean completed) {
+    public Todo(String title) {
         this.title = title;
-        this.completed = completed;
+        this.completed = false;
     }
 
     public String get_id() {
