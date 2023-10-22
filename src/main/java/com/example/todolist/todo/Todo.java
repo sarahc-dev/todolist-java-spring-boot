@@ -1,6 +1,11 @@
 package com.example.todolist.todo;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document("todos")
 public class Todo {
+    @Id
     private String _id;
     private String title;
     private boolean completed;
