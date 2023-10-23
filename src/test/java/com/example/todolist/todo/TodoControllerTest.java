@@ -8,11 +8,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -74,6 +77,27 @@ public class TodoControllerTest {
                 .content(todoJson))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.title", equalTo("get milk")));
+                .andExpect(jsonPath("$.title", equalTo("get milk")))
+                .andExpect(jsonPath("$.completed", equalTo(false)));
+    }
+
+    @Test
+    public void marksATodoAsComplete() throws Exception {
+        Todo updatedTodo = new Todo("1", "get milk", true);
+        ResponseEntity<Todo> responseEntity = ResponseEntity.ok(updatedTodo);
+
+        String newValue = "{\"completed\": true}";
+
+        HashMap<String, Object> updateTodoField = new HashMap<>();
+        updateTodoField.put("completed", true);
+        when(service.editTodo("1", updateTodoField)).thenReturn(responseEntity);
+        mockMvc.perform(patch("/api/todos/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newValue))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._id", equalTo("1")))
+                .andExpect(jsonPath("$.title", equalTo("get milk")))
+                .andExpect(jsonPath("$.completed", equalTo(true)));
     }
 }
