@@ -49,4 +49,18 @@ public class TodoService {
         Todo updatedTodo = todoRepository.save(existingTodo);
         return ResponseEntity.ok(updatedTodo);
     }
+
+    public ResponseEntity<Todo> deleteTodo(String id) {
+//      Mongoose method returns the deleted id. To do the equivalent in Java, need to separately get item by id
+//      Not necessary but added in as comparison
+        Optional<Todo> retrieveTodoOptional = todoRepository.findById(id);
+        if (retrieveTodoOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Todo deletedTodo = retrieveTodoOptional.get();
+
+        todoRepository.deleteById(id);
+
+        return ResponseEntity.ok(deletedTodo);
+    }
 }

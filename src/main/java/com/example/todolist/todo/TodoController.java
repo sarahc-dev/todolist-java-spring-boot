@@ -40,4 +40,9 @@ public class TodoController {
 
         return todoService.editTodo(id, updatedField);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Todo> deleteTodo(@PathVariable String id) {
+        return todoService.deleteTodo(id);
+    }
 }

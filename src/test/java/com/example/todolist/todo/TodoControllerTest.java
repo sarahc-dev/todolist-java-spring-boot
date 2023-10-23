@@ -82,7 +82,7 @@ public class TodoControllerTest {
     }
 
     @Test
-    public void marksATodoAsComplete() throws Exception {
+    public void markATodoAsCompleteAndReturnUpdatedTodo() throws Exception {
         Todo updatedTodo = new Todo("1", "get milk", true);
         ResponseEntity<Todo> responseEntity = ResponseEntity.ok(updatedTodo);
 
@@ -99,5 +99,40 @@ public class TodoControllerTest {
                 .andExpect(jsonPath("$._id", equalTo("1")))
                 .andExpect(jsonPath("$.title", equalTo("get milk")))
                 .andExpect(jsonPath("$.completed", equalTo(true)));
+    }
+
+    @Test
+    public void editsTodoTitleAndReturnUpdatedTodo() throws Exception {
+        Todo updatedTodo = new Todo("2", "get coffee", false);
+        ResponseEntity<Todo> responseEntity = ResponseEntity.ok(updatedTodo);
+
+        String newValue = "{\"title\": \"get coffee\"}";
+
+        HashMap<String, Object> updateTodoField = new HashMap<>();
+        updateTodoField.put("title", "get coffee");
+        when(service.editTodo("2", updateTodoField)).thenReturn(responseEntity);
+        mockMvc.perform(patch("/api/todos/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newValue))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._id", equalTo("2")))
+                .andExpect(jsonPath("$.title", equalTo("get coffee")))
+                .andExpect(jsonPath("$.completed", equalTo(false)));
+    }
+
+    @Test
+    public void deletesATodoAndReturnsDeletedTodo() throws Exception {
+        Todo deletedTodo = new Todo("1", "get coffee", false);
+        ResponseEntity<Todo> responseEntity = ResponseEntity.ok(deletedTodo);
+
+        when(service.deleteTodo("1")).thenReturn(responseEntity);
+        mockMvc.perform(delete("/api/todos/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._id", equalTo("1")))
+                .andExpect(jsonPath("$.title", equalTo("get coffee")))
+                .andExpect(jsonPath("$.completed", equalTo(false)));
     }
 }
