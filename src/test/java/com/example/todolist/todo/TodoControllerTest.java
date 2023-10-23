@@ -2,6 +2,7 @@ package com.example.todolist.todo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -10,8 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -28,19 +30,36 @@ public class TodoControllerTest {
     @MockBean
     private TodoService service;
 
-    @MockBean
+    @Mock
     private MongoTemplate mongoTemplate;
 
     @Test
-    public void todosShouldInitiallyReturnEmptyTodosList() throws Exception {
+    public void getTodosShouldInitiallyReturnEmptyTodosList() throws Exception {
         when(service.getTodos()).thenReturn(new ArrayList<>());
         mockMvc.perform(get("/api/todos")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
-//                .andExpect(jsonPath("$[0]._id", equalTo("1")))
-//                .andExpect(jsonPath("$[0].title", equalTo("Feed cat")))
-//                .andExpect(jsonPath("$[0].completed", equalTo(false)));
+    }
+
+    @Test
+    public void getTodosShouldReturnListOfTodos() throws Exception {
+        Todo mockTodo1 = new Todo("1", "get milk", false);
+        Todo mockTodo2 = new Todo("2", "feed cat", false);
+        List<Todo> todolist = new ArrayList<>();
+        todolist.add(mockTodo1);
+        todolist.add(mockTodo2);
+
+        when(service.getTodos()).thenReturn(todolist);
+        mockMvc.perform(get("/api/todos")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0]._id", equalTo("1")))
+                .andExpect(jsonPath("$[0].title", equalTo("get milk")))
+                .andExpect(jsonPath("$[0].completed", equalTo(false)))
+                .andExpect(jsonPath("$[1]._id", equalTo("2")))
+                .andExpect(jsonPath("$[1].title", equalTo("feed cat")))
+                .andExpect(jsonPath("$[1].completed", equalTo(false)));
     }
 
     @Test
