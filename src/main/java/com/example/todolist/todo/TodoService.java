@@ -1,11 +1,8 @@
 package com.example.todolist.todo;
 
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,24 +13,19 @@ public class TodoService {
     @Autowired
     private TodoRepository todoRepository;
 
-    ArrayList<Todo> todos;
-
-//    public TodoService() {
-//        todos = new ArrayList<Todo>();
-//    }
     public List<Todo> getTodos() {
-        return todoRepository.findAll();
+            return todoRepository.findAll();
     }
 
     public Todo addTodo(Todo todo) {
-        return todoRepository.save(todo);
+            return todoRepository.save(todo);
     }
 
-    public ResponseEntity<Todo> editTodo(String id, Map<String, Object> updatedField) {
+    public Todo editTodo(String id, Map<String, Object> updatedField) {
         Optional<Todo> existingTodoOptional = todoRepository.findById(id);
 
         if (existingTodoOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new TodoServiceException("id does not exist", new RuntimeException());
         }
 
         Todo existingTodo = existingTodoOptional.get();
@@ -46,21 +38,20 @@ public class TodoService {
             existingTodo.setTitle((String) completedValue);
         }
 
-        Todo updatedTodo = todoRepository.save(existingTodo);
-        return ResponseEntity.ok(updatedTodo);
+        return todoRepository.save(existingTodo);
     }
 
-    public ResponseEntity<Todo> deleteTodo(String id) {
+    public Todo deleteTodo(String id) {
 //      Mongoose method returns the deleted id. To do the equivalent in Java, need to separately get item by id
 //      Not necessary but added in as comparison
         Optional<Todo> retrieveTodoOptional = todoRepository.findById(id);
         if (retrieveTodoOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new TodoServiceException("id does not exist", new RuntimeException());
         }
         Todo deletedTodo = retrieveTodoOptional.get();
 
         todoRepository.deleteById(id);
 
-        return ResponseEntity.ok(deletedTodo);
+        return deletedTodo;
     }
 }
