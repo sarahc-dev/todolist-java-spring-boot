@@ -20,7 +20,12 @@ You will need to have MongoDB running locally at localhost:27017.
 git clone https://github.com/sarahc-dev/todolist-java-spring-boot.git
 ```
 
-Open and run the Application in an IDE like IntelliJ. 
+To run the application test server:
+
+```bash
+cd todolist-java-spring-boot
+./gradlew bootRun --args='--spring.profiles.active=test'
+```
 
 React frontend can be found [here](https://github.com/sarahc-dev/todolist-frontend-nextjs), and it is hosted on 
 Vercel [here](https://todolist-frontend-nextjs.vercel.app/) (need to host API and MongoDB database locally).
@@ -66,6 +71,14 @@ example, this is reset in the next test), however for some inexplicable reason r
 changes the order of the items in the embedded database for the test of the GET route. It does not do this in the real 
 database. Also, the tests do not run in order, so I have had to force the testing of the GET route to occur first to 
 avoid this quirk.
+
+After thinking that I did not need to implement the api/test/deleteAll because my tests here are running on a separate 
+embedded database, I have since realised I do need this because it is the e2e tests that utilise this. Which brings up 
+the issue that I do not want the e2e tests to delete everything from my database (or anybody who accesses that route) - 
+so I do need some way of also running the application in a 'test' environment. I have implemented a 'test' profile which 
+connects to a different mongodb database. I also created another controller for this route and by adding the 
+@Profile("test") annotation, it's access is limited to only when running the "test" profile. Confirmed that all my e2e 
+tests in the todolist frontend are still passing.
 
 ## Result
 
