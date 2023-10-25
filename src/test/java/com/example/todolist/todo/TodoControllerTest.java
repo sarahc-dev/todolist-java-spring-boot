@@ -180,6 +180,15 @@ public class TodoControllerTest {
     }
 
     @Test
+    public void returnsClientErrorIfTitleIsEmpty() throws Exception {
+        mockMvc.perform(patch("/api/todos/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\": \"\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Title should not be empty"));
+    }
+
+    @Test
     public void handlesErrorDeletingTodo() throws Exception {
         when(service.deleteTodo("1")).thenThrow(new RuntimeException("Error deleting todo"));
         mockMvc.perform(delete("/api/todos/1")

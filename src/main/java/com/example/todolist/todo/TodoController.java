@@ -48,6 +48,11 @@ public class TodoController {
     public ResponseEntity<Todo> editTodo(
             @PathVariable String id,
             @RequestBody Map<String, Object> updatedField) {
+
+        if (updatedField.containsKey("title") && updatedField.get("title") == "") {
+            throw new TodoServiceException("Title should not be empty", new RuntimeException("Error"), HttpStatus.BAD_REQUEST);
+        }
+
         try {
             Todo editedTodo = todoService.editTodo(id, updatedField);
             return new ResponseEntity<>(editedTodo, HttpStatus.OK);

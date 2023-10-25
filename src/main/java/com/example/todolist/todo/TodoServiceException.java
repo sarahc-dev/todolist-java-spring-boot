@@ -10,7 +10,7 @@ public class TodoServiceException extends RuntimeException {
     }
 
     public TodoServiceException(String message, Throwable cause, HttpStatus httpStatus) {
-        super(message);
+        super(message, cause);
         this.httpStatus = httpStatus;
     }
 

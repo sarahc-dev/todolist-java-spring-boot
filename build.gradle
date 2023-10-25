@@ -26,7 +26,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation "org.mockito:mockito-core:3.+"
-	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.9.3'
+	testImplementation 'de.bwaldvogel:mongo-java-server:1.44.0'
 }
 
 tasks.named('test') {
